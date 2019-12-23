@@ -1,0 +1,196 @@
+extends ../_layout-article
+
+block article-content
+    div(class="test-article")
+        h2 Intro
+        p  This is a page to test different formats for creating scrollytelling content. 
+        h2 Scrolly Testing
+               
+        h3 Scrolly Overlay - Image
+        section(class="scrolly-overlay")
+            figure
+                img(src='https://camo.githubusercontent.com/5da3ed41336cdccc6f186d13e9de7e97cced98b3/687474703a2f2f692e696d6775722e636f6d2f6d7666766766302e6a7067')
+            article
+                div(class="step", data-step="1")
+                    p Step 1
+                div(class="step", data-step="2")
+                    p Step 2
+                div(class="step", data-step="3")
+                    p Step 3
+                div(class="step", data-step="4")
+                    p Step 4
+
+        h3 Scrolly Vers - Plotly
+        section(class="scrolly-vers")
+            figure(class="plotly-figure")
+                iframe(class="plotly", frameborder="0", src="//plot.ly/~jbixon13/1.embed")        
+            article
+                div(class="step", data-step="1")
+                    p This is a plotly chart
+                div(class="step", data-step="2")
+                    p I can create charts in R and then embed them here
+                div(class="step", data-step="3")
+                    p Hopefully using iframes doesn't harm performance too much
+                div(class="step", data-step="4")
+                    p I wonder if charts created using ggplotly are slower than native plotly charts here as well
+
+        h3 Scrolly Overlay - Deck.gl
+        section(class="scrolly-overlay")
+            figure(class="deck-figure")
+                div(class="deck-container", id="map1")
+            article
+                div(class="step", data-step="1")
+                    p This is Federal Hill, Baltimore
+                div(class="step", data-step="2")
+                    p I live here!
+                div(class="step", data-step="3")
+                    p I have disabled user input on this map
+                div(class="step", data-step="4")
+                    p This looks pretty cool
+
+        h3 Scrolly Vers - Deck.gl
+        section(class="scrolly-vers")
+            figure(class="deck-figure")
+                div(class="deck-container", id="map2")
+            article
+                div(class="step", data-step="1")
+                    p This is Federal Hill, Baltimore
+                div(class="step", data-step="2")
+                    p I live here!
+                div(class="step", data-step="3")
+                    p This is a versatile Scrolly section
+                div(class="step", data-step="4")
+                    p This means it will move the text to the side when viewed on desktop and will overlay the text on mobile.
+
+        h3 Scrolly Vers - Deck.gl Transitions
+        section(class="scrolly-vers")
+            figure(class="deck-figure")
+                div(class="deck-container", id="map3")        
+            article
+                div(class="step", data-step="1")
+                    p This is Philadelphia
+                div(class="step", data-step="2")
+                    p There are lots of tall buildings, but you can't see them here
+                div(class="step transition", data-step="3")
+                    p Let's focus on Center City so we can see those buildings
+                div(class="step", data-step="4")
+                    p This is to test out storytelling with maps
+                div(class="step transition", data-step="5")
+                    p You can see the buildings in downtown Philly are much bigger than the ones in downtown Baltimore
+                div(class="step", data-step="6")
+                    p This is an illustrative example of key concepts for my scrollytelling components: they are useful on mobile and desktop and they transition smoothly to continue the narrative
+
+        h2 Conclusion
+        p Scroll
+        p Scroll
+        p Scroll
+    
+    script(src="https://unpkg.com/scrollama")
+    script(src="https://d3js.org/d3.v5.js")
+    script(src="https://unpkg.com/deck.gl@latest/dist.min.js")
+    script(src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js")
+    link(href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css" rel='stylesheet')
+    
+    script.
+        new deck.DeckGL({
+        mapboxApiAccessToken: 'pk.eyJ1IjoiamJpeG9uIiwiYSI6ImNqd3pmYm15djFmajEzeW50bTcyNjlubXoifQ.IKupMx-qfYG4Gchw_Utupg',
+        mapStyle: 'mapbox://styles/jbixon/cjxchrj87086s1ct8cs8m351s',
+        container: 'map1',
+        controller: false,
+        touchAction: 'pan-y',
+        longitude: -76.61,
+        latitude: 39.282,
+        zoom: 15,
+        pitch: 60,
+        });
+
+    script.
+        new deck.DeckGL({
+        mapboxApiAccessToken: 'pk.eyJ1IjoiamJpeG9uIiwiYSI6ImNqd3pmYm15djFmajEzeW50bTcyNjlubXoifQ.IKupMx-qfYG4Gchw_Utupg',
+        mapStyle: 'mapbox://styles/jbixon/cjxchrj87086s1ct8cs8m351s',
+        container: 'map2',
+        controller: false,
+        touchAction: 'pan-y',
+        longitude: -76.61,
+        latitude: 39.282,
+        zoom: 15,
+        pitch: 60,
+        });
+
+    script. 
+        const {DeckGL, FlyToInterpolator} = deck;
+
+        var currentIndex = 0;
+
+        const VIEWS = [
+            {"scene":"phillyOut", "latitude":39.95, "longitude":-75.166, "zoom":13},
+            {"scene":"phillyIn", "latitude":39.95, "longitude":-75.166, "zoom":15},
+            {"scene":"baltIn", "latitude":39.282, "longitude":-76.61, "zoom":15}
+        ];
+
+        const deckgl = new DeckGL ({
+            mapboxApiAccessToken: 'pk.eyJ1IjoiamJpeG9uIiwiYSI6ImNqd3pmYm15djFmajEzeW50bTcyNjlubXoifQ.IKupMx-qfYG4Gchw_Utupg',
+            mapStyle: 'mapbox://styles/jbixon/cjxchrj87086s1ct8cs8m351s',
+            container: 'map3',
+            controller: {scrollZoom: false, dragPan: false},
+            touchAction: 'pan-y',
+            viewState: {
+                longitude: VIEWS[currentIndex].longitude,
+                latitude: VIEWS[currentIndex].latitude,
+                zoom: VIEWS[currentIndex].zoom,
+                pitch: 60
+            }
+        });
+    
+
+    script. 
+        var scroller = scrollama();
+
+        function handleStepEnter(response) {
+            if (response.direction === 'down') {
+                console.log(response)
+
+                currentIndex +=1;
+                
+                deckgl.setProps({
+                    viewState: {
+                        longitude: VIEWS[currentIndex].longitude,
+                        latitude: VIEWS[currentIndex].latitude,
+                        zoom: VIEWS[currentIndex].zoom,
+                        pitch: 60,
+                        transitionInterpolator: new FlyToInterpolator(),
+                        transitionDuration: 4000
+                    }
+                })
+            }
+
+
+        }
+
+        function handleStepExit(response) {
+            if (response.direction === 'up') {
+                currentIndex -=1;
+
+                deckgl.setProps({
+                    viewState: {
+                        longitude: VIEWS[currentIndex].longitude,
+                        latitude: VIEWS[currentIndex].latitude,
+                        zoom: VIEWS[currentIndex].zoom,
+                        pitch: 60,
+                        transitionInterpolator: new FlyToInterpolator(),
+                        transitionDuration: 4000
+                    }
+                })
+            }
+        }
+
+        scroller 
+        .setup({
+            step: '.transition',
+            debug: false,
+            offset: 0.4
+        })
+        .onStepEnter(handleStepEnter)
+        .onStepExit(handleStepExit);
+    
+
